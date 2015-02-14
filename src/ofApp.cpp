@@ -3,12 +3,12 @@
 
 /*
  * ofAppクラスのsetup()メソッドを定義する。
- * ::は「スコープ解決演算子」と呼ばれるもので、名前空間のduplicateをさける役割がある
- * namespaceもしくはClassで分ける
- * C++ において、::（スコープ解決）演算子は、スコープ外の変数名または関数名のグローバル識別子です。
- * どのクラスのsetup()なのかを明示している
+ * ::は「スコープ解決演算子」と呼ばれるもので、名前空間のduplicate(重複)をさける役割があります。
+ * namespace(名前空間)もしくはClassで分ける。
+ * C++ において、::(スコープ解決)演算子は、スコープ外の変数名または関数名のグローバル識別子です。
+ * どのクラスのsetup()なのかを明示しています。
  */
-//CommitTest
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetFrameRate(60);
@@ -19,11 +19,13 @@ void ofApp::setup(){
     for (int i=0; i<INITIAL_NUM_OF_POLYGONS; i++){
         polygons.push_back(new Polygon3d());//動的配列生成
         /*
-         * 動的配列Polygon3d型のpolygonsの最後尾に引数のとデータを付け足す。
+         * 動的配列Polygon3d型のpolygonsの最後尾に引数のとデータを付け足します。
          * 「new演算子」を使用することで、オブジェクトを任意のタイミングで動的に生成することが可能となります。
          * new演算子は、記憶領域の空き領域(ヒープ heap)から指定したクラスを大きさの領域を確保します。
-         * その際、new演算子は確保した領域のアドレスを返します。この動的な記憶領域のエイリアスを使用するために、ポインタを利用します。
-         * 上記の場合、new Polygon3d()で生成されるものは Polygon3dクラスのオブジェクトそのものではなく、Polygon3dクラスのオブジェクトをさしているポインタである
+         * その際、new演算子は確保した領域のアドレスを返します。
+         * この動的な記憶領域のエイリアスを使用するために、ポインタを利用します。
+         * 上記の場合、new Polygon3d()で生成されるものは 
+         * Polygon3dクラスのオブジェクトそのものではなく、Polygon3dクラスのオブジェクトをさしているポインタです。
          */
     }
     for (int i=0; i<polygons.size(); i++) {
@@ -34,7 +36,7 @@ void ofApp::setup(){
          * (動的に生成したオブジェクトのポインタから、そのメンバであるメソッドやプロパティを参照するには、ドット演算子「.」の代わりに、アロー演算子「->」を用います。)
          */
         polygons.at(i)->setPolygonType(floor(ofRandom(2)));
-        //Floor関数で(0,2)のランダムの数値を50%の確率を維持したまま0or1に数値変換
+        //Floor関数で(0,2)のランダムの数値を50%の確率を維持したまま0または1に数値変換
         polygons.at(i)->setPolygonSize(floor(ofRandom(10,30)));
         //図形のサイズを初期化
     }
@@ -42,10 +44,8 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    objectSizeScale = 1 + 0.3 * pow(sin((double)ofGetElapsedTimeMillis()/100),6.0);//周期的に変化する変数を生成
-    
     if (accelFlag) cameraSpeed += 0.005; //accelFlagはfalseで初期化されている
-    else if (cameraSpeed > 0) cameraSpeed -= 0.020; //accelFlagがtrueかつ、speedが正のとき、慣性をつけるために
+    else if (cameraSpeed > 0) cameraSpeed -= 0.020; //accelFlagがtrueかつ、speedが正のとき、慣性をつけるために、実装
     else cameraSpeed = 0; //もし負になってしまえばスピードをゼロに初期化
     cameraPosition += cameraSpeed;//cameraPositionを更新
     
@@ -63,7 +63,6 @@ void ofApp::draw(){
     ofSetColor(ofColor::fromHsb((ofGetFrameNum())%255,255,255));
     ofPushMatrix();//座標系を保存
     ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
-    //light.enable();
     light.enable();
     camera.begin();
     float temp = ofRandom(0,1);
@@ -75,7 +74,7 @@ void ofApp::draw(){
             ofLine(polygons.at(i-1)->getPolygonPosition(),polygons.at(i)->getPolygonPosition());
         }
         
-        switch (polygons.at(i)->getPolygonType()) {//getPolygonTypeによって描画の図形を
+        switch (polygons.at(i)->getPolygonType()) {//getPolygonTypeによって描画の図形を判定
             case 0://ボックスを描画
                 boxPrimitive.setPosition(polygons.at(i)->getPolygonPosition());
                 boxPrimitive.set(polygons.at(i)->getPolygonSize());
@@ -107,14 +106,14 @@ void ofApp::keyPressed(int key){
     } else if (key == 'f') {
         ofToggleFullscreen();
     }else if(key==OF_KEY_DOWN && polygons.size()>0){
-        /* 動的に生成されたオブジェクトは、delete演算子を用いて破棄することが可能ですが。
+        /* 動的に生成されたオブジェクトは、delete演算子を用いて破棄することが可能ですが、
          * detele演算子でオブジェクトを破棄することで、
          * 確保された領域は解放されまたヒープ領域(空領域)に戻され、再利用できるようになります。
          * new演算子とdelete演算子を適切なタイミングで使用することで、
          * メモリを効率良く使用しながらプログラムを実行することが可能となります。
+         * 今回はpop_back()を使っています。
          */
         polygons.pop_back();
-        //delete polygons.at(polygons.size()-1);だとうまく行かない
     }else if(key==OF_KEY_UP){
         polygons.push_back(new Polygon3d());
         polygons.back()->setPolygonPosition(ofRandom(-2000, 2000),ofRandom(-2000, 2000),ofRandom(-2000, 2000));
