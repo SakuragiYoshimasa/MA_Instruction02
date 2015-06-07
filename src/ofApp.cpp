@@ -15,7 +15,7 @@ void ofApp::setup(){
     ofSetSphereResolution(100);
     ofEnableDepthTest();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
-    ofToggleFullscreen();
+    //ofToggleFullscreen();
     for (int i=0; i<INITIAL_NUM_OF_POLYGONS; i++){
         polygons.push_back(new Polygon3d());//動的配列生成
         /*
@@ -35,7 +35,7 @@ void ofApp::setup(){
          * 今回生成されて、配列に格納されているのは、オブジェクトへのポインタであるから、アロー演算子を使う
          * (動的に生成したオブジェクトのポインタから、そのメンバであるメソッドやプロパティを参照するには、ドット演算子「.」の代わりに、アロー演算子「->」を用います。)
          */
-        polygons.at(i)->setPolygonType(floor(ofRandom(2)));
+        polygons.at(i)->setPolygonType(floor(ofRandom(11)));
         //Floor関数で(0,2)のランダムの数値を50%の確率を維持したまま0または1に数値変換
         polygons.at(i)->setPolygonSize(floor(ofRandom(10,30)));
         //図形のサイズを初期化
@@ -117,7 +117,7 @@ void ofApp::keyPressed(int key){
     }else if(key==OF_KEY_UP){
         polygons.push_back(new Polygon3d());
         polygons.back()->setPolygonPosition(ofRandom(-2000, 2000),ofRandom(-2000, 2000),ofRandom(-2000, 2000));
-        polygons.back()->setPolygonType(floor(ofRandom(2)));
+        polygons.back()->setPolygonType(floor(ofRandom(1)));
         polygons.back()->setPolygonSize(floor(ofRandom(20,300)));
     }else if(key==OF_KEY_RETURN){
         lineMode= !lineMode;
